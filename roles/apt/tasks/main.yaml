@@ -1,0 +1,19 @@
+---
+- name: Install common purpose APT packages
+  ansible.builtin.apt:
+    name: "{{ item.name }}"
+    state: "{{ item.state|default('latest') }}"
+    allow_unauthenticated: yes
+  loop:
+    - { name: apt-transport-https }
+    - { name: bash-completion }
+    - { name: ca-certificates }
+    - { name: curl }
+    - { name: git }
+    - { name: gnupg2 }
+    - { name: lsb-release }
+    - { name: python3-setuptools }
+    - { name: software-properties-common }
+    - { name: mc }
+    - { name: wget }
+  become: yes

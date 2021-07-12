@@ -1,0 +1,51 @@
+---
+- name: Add SIGN key for Nginx repository
+  apt_key:
+    url: https://nginx.org/keys/nginx_signing.key
+    state: present
+  become: yes
+
+- name: Install Nginx
+  ansible.builtin.apt:
+    name: "{{ item.name }}"
+    state: "{{ item.state|default('latest') }}"
+    allow_unauthenticated: yes
+  loop:
+    - { name: nginx }
+  become: yes
+
+- name: Generate an OpenSSL private key with a different algorithm (DSA)
+  community.crypto.openssl_privatekey:
+    path: "/etc/ssl/private/{{ project_name }}.key"
+    size: 3072
+  become: true
+  notify:
+    - restart nginx
+
+- name: Generate a Self Signed OpenSSL certificate
+  openssl_certificate:
+    path: "/etc/ssl/certs/{{ project_name }}.crt"
+    privatekey_path: "/etc/ssl/private/{{ project_name }}.key"
+    provider: selfsigned
+  become: true
+  notify:
+    - restart nginx
+
+- name: Check that the project configuration exists
+  stat:
+    path: /etc/nginx/conf.d/{{ project_name }}.conf
+  register: project_configuration
+
+- name: Ensure project directory exists
+  ansible.builtin.file:
+    path: "/home/{{ os_username }}/{{ project_name }}/public"
+    state: directory
+
+- name: Create project configuration file
+  ansible.builtin.template:
+    src: "../templates/symfony.conf.j2"
+    dest: "/etc/nginx/conf.d/{{ project_name }}.conf"
+  become: true
+  when: not project_configuration.stat.exists
+  notify:
+    - restart nginx

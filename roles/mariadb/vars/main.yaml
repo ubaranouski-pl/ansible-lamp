@@ -1,0 +1,9 @@
+---
+mysql_daemon: mysql
+mysql_python_package: "python3-pymysql"
+mysql_root_password: '123'
+mysql_user_home: "{{ ansible_env.HOME}}"
+login_unix_socket: "{{ '/var/run/mysqld/mysqld.sock' if ansible_distribution == 'Debian' else '' | default(omit) }}"
+mysql_remove_remote_root: true
+mysql_remove_anonymous_users: true
+mysql_remove_test_database: true
