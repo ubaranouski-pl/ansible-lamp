@@ -1,4 +1,4 @@
-upstream phpfcgi {
+upstream phpfcgi_{{ project_name }} {
     server 127.0.0.1:9000;
 }
 
@@ -24,7 +24,7 @@ server {
     # }
 
     location ~ ^/index\.php(/|$) {
-        fastcgi_pass phpfcgi;
+        fastcgi_pass phpfcgi_{{ project_name }};
         fastcgi_split_path_info ^(.+\.php)(/.*)$;
         include fastcgi_params;
 

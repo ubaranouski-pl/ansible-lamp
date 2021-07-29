@@ -40,6 +40,9 @@
   ansible.builtin.file:
     path: "/home/{{ os_username }}/{{ project_name }}/public"
     state: directory
+    owner: '{{ os_username }}'
+    group: 'www-data'
+    mode: '0775'
 
 - name: Create project configuration file
   ansible.builtin.template:

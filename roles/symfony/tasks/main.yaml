@@ -1,0 +1,23 @@
+---
+- name: Check symfony CLI is already installed
+  ansible.builtin.shell:
+    cmd: symfony -v > /dev/null 2>&1
+  register: symfony_installed
+  ignore_errors: yes
+
+- debug: var=symfony_installed
+
+- name: Install symfony
+  ansible.builtin.shell:
+    cmd: wget https://get.symfony.com/cli/installer -O - | bash
+  when: symfony_installed.failed
+  become: true
+  become_user: '{{ os_username }}'
+
+- name: Create link to symfony binary
+  file:
+    src: "/home/{{ os_username }}/.symfony/bin/symfony"
+    dest: "/usr/bin/symfony"
+    state: link
+  when: symfony_installed.failed
+  become: true
