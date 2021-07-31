@@ -1,4 +1,10 @@
 ---
+- name: Update all packages
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+  become: yes
+
 - name: Install common purpose APT packages
   ansible.builtin.apt:
     name: "{{ item.name }}"
