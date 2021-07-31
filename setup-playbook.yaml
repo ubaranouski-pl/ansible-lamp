@@ -2,7 +2,6 @@
 - hosts: localhost
   vars:
     os_username: user1
-    project_name: "{{ lookup('env', 'PROJECT_NAME') | default('symfony', True) }}"
   roles:
     - apt
     - mariadb

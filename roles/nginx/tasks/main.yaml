@@ -21,6 +21,8 @@
   become: true
   notify:
     - restart nginx
+  tags:
+    - project
 
 - name: Generate a Self Signed OpenSSL certificate
   openssl_certificate:
@@ -30,11 +32,15 @@
   become: true
   notify:
     - restart nginx
+  tags:
+    - project
 
 - name: Check that the project configuration exists
   stat:
     path: /etc/nginx/conf.d/{{ project_name }}.conf
   register: project_configuration
+  tags:
+    - project
 
 - name: Ensure project directory exists
   ansible.builtin.file:
@@ -43,6 +49,8 @@
     owner: '{{ os_username }}'
     group: 'www-data'
     mode: '0775'
+  tags:
+    - project
 
 - name: Create project configuration file
   ansible.builtin.template:
@@ -52,3 +60,5 @@
   when: not project_configuration.stat.exists
   notify:
     - restart nginx
+  tags:
+    - project
