@@ -21,3 +21,18 @@
     state: link
   when: symfony_installed.failed
   become: true
+
+- name: Create project
+  ansible.builtin.shell:
+    cmd: "symfony new --full --no-git /home/{{ os_username }}/{{ project_name }}"
+  tags:
+    - project
+
+- name: Link composer to the project's binaries directory
+  file:
+    src: "/home/{{ os_username }}/.symfony/composer/composer.phar"
+    dest: "/home/{{ os_username }}/{{ project_name }}/bin/composer"
+    state: link
+  become: true
+  tags:
+    - project
