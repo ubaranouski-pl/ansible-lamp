@@ -7,4 +7,4 @@ else
 fi
 PROJECT_NAME=${PROJECT_NAME:-symfony}
 export PROJECT_NAME
-ansible-playbook -i inventory --tags "project" project-playbook.yaml
+ansible-playbook -i inventory --tags "project" project-playbook.yaml -e 'ansible_python_interpreter=/usr/bin/python3' --ask-become-pass

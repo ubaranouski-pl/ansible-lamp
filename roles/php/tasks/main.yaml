@@ -1,4 +1,11 @@
 ---
+- name: Add a DPA signing key
+  ansible.builtin.apt_key:
+    url: https://packages.sury.org/php/apt.gpg
+    id: 15058500A0235D97F5D10063B188E2B695BD4743
+    state: present
+  become: yes
+
 - name: Add apt repositories
   apt_repository:
     repo: deb https://packages.sury.org/php/ buster main
@@ -11,7 +18,6 @@
     state: "{{ item.state|default('latest') }}"
     allow_unauthenticated: yes
   loop:
-    - { name: php8.0 }
     - { name: php8.0-fpm }
     - { name: php8.0-apcu }
     - { name: php8.0-bcmath }

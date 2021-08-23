@@ -14,5 +14,5 @@ sudo ./setup.sh
 ## Create project
 If you want override the default project name [*symfony*] you can pass it in the first argument. 
 ```shell
-sudo ./project.sh my-app
+./project.sh my-app
 ```
