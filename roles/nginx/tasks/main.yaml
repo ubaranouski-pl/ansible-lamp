@@ -56,9 +56,20 @@
 - name: Create project configuration file
   ansible.builtin.template:
     src: "../templates/symfony.conf.j2"
-    dest: "/etc/nginx/conf.d/{{ project_name }}.conf"
+    dest: "/etc/nginx/sites-available/{{ project_name }}.conf"
   become: true
   when: not project_configuration.stat.exists
+  notify:
+    - restart nginx
+  tags:
+    - project
+
+- name: Link composer to the project's binaries directory
+  file:
+    src: "/etc/nginx/sites-available/{{ project_name }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ project_name }}.conf"
+    state: link
+  become: true
   notify:
     - restart nginx
   tags:
